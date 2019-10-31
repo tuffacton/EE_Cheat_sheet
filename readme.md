@@ -139,15 +139,17 @@ docker load < dtr.tar.gz #on only DTR nodes
 
 [UCP Install Docs](https://docs.docker.com/ee/ucp/admin/install/#step-4-install-ucp)
 
-Please change the <node-ip-address> to the front facing network of the node.
+Please change the <node-ip-address> to the front facing network of the node and the <specific_version_you_have> to the UCP container that was provided. Find it via `docker images`.
 
 ```bash
 export ucp_ip=$(hostname -I | awk '{print $1}')
 
 docker container run --rm -it --name ucp --security-opt label=disable \
-  -v /var/run/docker.sock:/var/run/docker.sock docker/ucp install \
+  -v /var/run/docker.sock:/var/run/docker.sock docker/ucp:<specific_version_you_have> install \
   --host-address $ucp_ip --interactive
 ```
+## Note on SAN
+You will be prompted to enter additional aliases. Here you would enter all additional possible aliases for the UCP which could include their FQDNs provisioned and associated by your administrators and tied your CA.
 
 ## Configure UCP (First UCP Node)
 
@@ -186,6 +188,9 @@ Configure DTR before adding new replicas.
 * [Add S3 External Storage](https://docs.docker.com/ee/dtr/admin/configure/external-storage/s3/)
 * [Add NFS External Storage](https://docs.docker.com/ee/dtr/admin/configure/external-storage/nfs/)
 * [Setup a Custom Load Balancer](https://docs.docker.com/ee/dtr/admin/configure/use-a-load-balancer/)
+
+## Offline DTR Notes
+- Similar to UCP, be sure to add the specific version number to the DTR addition to ensure local image pull/resolution.
 
 ## Add DTR Replicas  (Additional DTR Nodes)
 
